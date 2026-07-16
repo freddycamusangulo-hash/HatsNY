@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hats NY // Gorros Premium - Coquimbo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Barra de Anuncios -->
+  <div class="top-bar">
+    <span id="announcement-text">📍 Envíos rápidos en Coquimbo y La Serena (IV Región)</span>
+    <button id="open-admin-login" class="admin-link-btn">🔒 Admin</button>
+  </div>
+
+  <!-- Navegación Principal -->
+  <header class="navbar">
+    <div class="logo">HATS <span>NY</span></div>
+    <nav class="nav-links">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <a id="nav-whatsapp-btn" class="button button--accent" target="_blank" rel="noopener">💬 WHATSAPP</a>
+  </header>
+
+  <!-- VISTA PÚBLICA -->
+  <div id="public-view">
+    <!-- Hero Banner -->
+    <section class="hero">
+      <div class="hero-content">
+        <span class="badge">DISEÑO URBANO &amp; ELEGANCIA</span>
+        <h1 id="hero-title">EL ESTILO QUE TE DEFINE</h1>
+        <p id="hero-subtitle">Gorros exclusivos con excelentes terminaciones y el mejor precio de la Cuarta Región.</p>
+        <a href="#catalogo" class="button button--primary">VER CATÁLOGO</a>
+      </div>
+    </section>
+
+    <!-- Catálogo de Productos -->
+    <section id="catalogo" class="catalog-section">
+      <div class="section-header">
+        <h2>NUESTRO CATÁLOGO</h2>
+        <div class="divider"></div>
+        <p>Stock y precios actualizados en tiempo real.</p>
+      </div>
+
+      <div id="products-grid" class="products-grid">
+        <!-- Los productos se cargan mediante JavaScript -->
+      </div>
+
+      <div id="empty-catalog" class="empty-state hidden">
+        <span class="empty-icon">🧢</span>
+        <p>Aún no hay productos publicados.<br>Vuelve pronto — estamos preparando el catálogo.</p>
+      </div>
+    </section>
+
+    <!-- Sección Nosotros / Calidad -->
+    <section id="nosotros" class="about-section">
+      <div class="about-card">
+        <h3 id="about-title">CALIDAD SIN COMPROMISOS EN COQUIMBO</h3>
+        <p id="about-text">En Hats NY creemos que vestir elegante no debe costar una fortuna. Seleccionamos cada gorro pensando en el mejor precio de la Cuarta Región.</p>
+      </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class="contact-section">
+      <div class="contact-card">
+        <h3>¿TIENES DUDAS SOBRE UN PRODUCTO?</h3>
+        <p id="contact-text">Escríbenos directo y te respondemos al tiro.</p>
+        <a id="contact-whatsapp-btn" class="button button--success" target="_blank" rel="noopener">💬 Chatear por WhatsApp</a>
+        <p class="contact-meta" id="contact-meta">Coquimbo, Chile</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL DE ACCESO ADMIN (Firebase Auth) -->
+  <div id="login-modal" class="modal-overlay hidden">
+    <div class="login-box">
+      <button class="close-modal close-login">&times;</button>
+      <div class="login-header">
+        <span class="lock-icon">🔐</span>
+        <h3>ACCESO DE SEGURIDAD</h3>
+        <p>Área restringida para administración de Hats NY.</p>
+      </div>
+      <form id="login-form">
+        <div class="input-group">
+          <label for="admin-email">CORREO</label>
+          <input type="email" id="admin-email" placeholder="tu@correo.com" autocomplete="off" required style="letter-spacing:normal; font-size:1rem;">
+        </div>
+        <div class="input-group">
+          <label for="admin-password">CONTRASEÑA</label>
+          <input type="password" id="admin-password" placeholder="••••••••" autocomplete="off" required style="letter-spacing:normal; font-size:1rem;">
+        </div>
+        <div id="login-error" class="error-msg hidden">Correo o contraseña incorrectos.</div>
+        <button type="submit" class="button button--primary full-width">AUTENTICAR</button>
+      </form>
+      <div class="security-note">
+        <p>⚠️ Acceso protegido por Firebase Authentication.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA ADMINISTRADOR (PANEL DE CONTROL) -->
+  <div id="admin-view" class="admin-portal hidden">
+    <aside class="admin-sidebar">
+      <div class="admin-logo">HATS NY <span>ADMIN</span></div>
+      <nav class="admin-nav">
+        <button class="admin-tab-btn active" data-tab="tab-productos">📦 Productos</button>
+        <button class="admin-tab-btn" data-tab="tab-sitio">⚙️ Contenido del Sitio</button>
+      </nav>
+      <button id="logout-btn" class="button button--danger">CERRAR SESIÓN</button>
+    </aside>
+
+    <main class="admin-content">
+      <!-- PESTAÑA 1: GESTIÓN DE PRODUCTOS -->
+      <section id="tab-productos" class="admin-tab active">
+        <header class="admin-header">
+          <h2>Inventario</h2>
+          <div class="admin-stats">
+            <span><strong id="stat-count">0</strong> productos</span>
+            <span><strong id="stat-stock">0</strong> unidades en stock</span>
+          </div>
+        </header>
+
+        <div class="admin-grid">
+          <!-- Formulario para agregar / editar -->
+          <div class="admin-card form-card">
+            <h3 id="form-title">Añadir Nuevo Gorro</h3>
+            <form id="product-form">
+              <input type="hidden" id="edit-id" value="">
+              <div class="form-group">
+                <label>Nombre del Modelo</label>
+                <input type="text" id="p-title" placeholder="Ej: Jockey Clásico Cuero" required>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Precio (CLP)</label>
+                  <input type="number" id="p-price" placeholder="12990" min="0" required>
+                </div>
+                <div class="form-group">
+                  <label>Stock (unidades)</label>
+                  <input type="number" id="p-stock" placeholder="5" min="0" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Descripción</label>
+                <textarea id="p-desc" rows="3" placeholder="Algodón 100%, broche metálico, costura reforzada..." required></textarea>
+              </div>
+              <div class="form-group">
+                <label>Foto del producto</label>
+                <input type="file" id="p-img" accept="image/*">
+                <small class="hint">Sube una foto real desde tu computador o celular.</small>
+                <img id="p-img-preview" class="img-preview hidden" alt="Vista previa">
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="button button--primary full-width">GUARDAR</button>
+                <button type="button" id="cancel-edit-btn" class="button button--accent full-width hidden">CANCELAR EDICIÓN</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Lista de productos actuales -->
+          <div class="admin-card list-card">
+            <h3>Gorros en el Catálogo</h3>
+            <div id="admin-products-list" class="admin-list">
+              <!-- Se genera con JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PESTAÑA 2: CONTENIDO DEL SITIO -->
+      <section id="tab-sitio" class="admin-tab">
+        <header class="admin-header">
+          <h2>Contenido del Sitio</h2>
+        </header>
+        <div class="admin-card">
+          <form id="settings-form">
+            <div class="form-group">
+              <label>Texto barra superior</label>
+              <input type="text" id="s-announcement">
+            </div>
+            <div class="form-group">
+              <label>Título principal (Hero)</label>
+              <input type="text" id="s-hero-title">
+            </div>
+            <div class="form-group">
+              <label>Subtítulo (Hero)</label>
+              <textarea id="s-hero-subtitle" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Título sección "Nosotros"</label>
+              <input type="text" id="s-about-title">
+            </div>
+            <div class="form-group">
+              <label>Texto sección "Nosotros"</label>
+              <textarea id="s-about-text" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Texto sección "Contacto"</label>
+              <textarea id="s-contact-text" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Número de WhatsApp (con código de país, solo números)</label>
+              <input type="text" id="s-whatsapp" placeholder="56912345678">
+              <small class="hint">Ej: 56912345678 — se usa para el botón de WhatsApp del sitio.</small>
+            </div>
+            <div class="form-group">
+              <label>Ubicación / horario (footer contacto)</label>
+              <input type="text" id="s-contact-meta" placeholder="Coquimbo, Chile · Lun a Sáb 10:00-19:00">
+            </div>
+            <button type="submit" class="button button--success full-width">GUARDAR CAMBIOS</button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Pie de Página -->
+  <footer class="footer">
+    <div class="footer-brand">
+      <h4>HATS NY</h4>
+      <p>Coquimbo, Chile.</p>
+    </div>
+    <div class="footer-copy">
+      <p>&copy; 2026 Hats NY. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- SDK de Firebase (versión compat, funciona sin npm ni proceso de build) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
